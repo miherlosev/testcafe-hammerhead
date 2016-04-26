@@ -3,8 +3,8 @@ var http     = require('http');
 var Path     = require('path');
 var process  = require('child_process');
 var readSync = require('read-file-relative').readSync;
-var Proxy    = require('testcafe-hammerhead').Proxy;
-var Session  = require('testcafe-hammerhead').Session;
+var Proxy    = require('../../lib/proxy');
+var Session  = require('../../lib/session');
 
 //Const
 var PROXY_PORT_1 = 1401;

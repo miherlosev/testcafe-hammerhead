@@ -1,3 +1,12 @@
-* {
-    background-color: red;
+#root {
+    position: absolute;
+    width: 200px;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+    background-color: white;
+}
+
+.pane {
+    padding: 10px;
 }
