@@ -11,11 +11,13 @@ var PROXY_PORT_1 = 1401;
 var PROXY_PORT_2 = 1402;
 var SERVER_PORT  = 1400;
 
-var CONTROL_PANEL_JS_PATH  = '/control-panel.js';
-var CONTROL_PANLE_CSS_PATH = '/control-panel.css';
+var CONTROL_PANEL_JS_INDEX_PATH      = '/index.js';
+var CONTROL_PANEL_JS_DATASOURCE_PATH = '/data-source.js';
+var CONTROL_PANLE_CSS_PATH           = '/control-panel.css';
 
-var CONTROL_PANEL_JS_CONTENT  = readSync('./control_panel_assets/control-panel.js');
-var CONTROL_PANEL_CSS_CONTENT = readSync('./control_panel_assets/control-panel.css');
+var CONTROL_PANEL_JS_INDEX_CONTENT       = readSync('./control_panel_assets/index.js');
+var CONTROL_PANEL_JS_DATA_SOURCE_CONTENT = readSync('./control_panel_assets/data-source.js');
+var CONTROL_PANEL_CSS_CONTENT            = readSync('./control_panel_assets/control-panel.css');
 
 function createSession () {
     var session = new Session('uploadRoot');
@@ -25,7 +27,8 @@ function createSession () {
     session.getAuthCredentials = function () { return {}; };
     session.handleFileDownload = function () { };
     session.handlePageError = function () { };
-    session.injectable.scripts.push(CONTROL_PANEL_JS_PATH);
+    session.injectable.scripts.push(CONTROL_PANEL_JS_DATASOURCE_PATH);
+    session.injectable.scripts.push(CONTROL_PANEL_JS_INDEX_PATH);
     session.injectable.styles.push(CONTROL_PANLE_CSS_PATH);
 
     return session;
@@ -33,7 +36,8 @@ function createSession () {
 
 function registerAssets (proxy) {
     proxy.GET(CONTROL_PANLE_CSS_PATH, { content: CONTROL_PANEL_CSS_CONTENT, contentType: 'text/css', isShadowUIStylesheet: true });
-    proxy.GET(CONTROL_PANEL_JS_PATH, { content: CONTROL_PANEL_JS_CONTENT, contentType: 'application/x-javascript' });
+    proxy.GET(CONTROL_PANEL_JS_INDEX_PATH, { content: CONTROL_PANEL_JS_INDEX_CONTENT, contentType: 'application/x-javascript' });
+    proxy.GET(CONTROL_PANEL_JS_DATASOURCE_PATH, { content: CONTROL_PANEL_JS_DATA_SOURCE_CONTENT, contentType: 'application/x-javascript' });
 }
 
 exports.start = function () {

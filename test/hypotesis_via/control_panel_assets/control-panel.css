@@ -1,4 +1,4 @@
-#root {
+.root {
     position: absolute;
     width: 200px;
     z-index: 10000;
@@ -9,4 +9,13 @@
 
 .pane {
     padding: 10px;
+    border: 1px solid black;
+}
+
+.notes-header {
+    font-size: 18px;
+}
+
+.note-list {
+
 }
