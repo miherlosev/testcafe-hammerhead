@@ -20,7 +20,7 @@ var controlPanel = {
         notesHeaderContainer.className = 'notes-header-container';
         this.notesContainer.appendChild(notesHeaderContainer);
     },
-    _renderNoteList: function () {
+    _renderNoteList:         function () {
         var notesListContainer = document.createElement('div');
         var notesList          = document.createElement('ul');
 
@@ -46,8 +46,13 @@ var controlPanel = {
         }
 
         notesListContainer.appendChild(notesList);
+        this.notesList = notesList;
     },
-    _renderNewNote:  function () {
+    _renderNewNote: function (text) {
+        var li = 
+        this.notesList.appendChild()
+    },
+    _renderNewNoteContainer: function () {
         var newNoteContainer = document.createElement('div');
 
         newNoteContainer.className = 'new-note-container';
@@ -75,19 +80,19 @@ var controlPanel = {
 
         this.newNoteText = newNoteText;
     },
-    _renderNotes:    function () {
+    _renderNotes:            function () {
         this._renderContainer();
         this._renderHeader();
         this._renderNoteList();
-        this._renderNewNote();
+        this._renderNewNoteContainer();
     },
-    _drawActionPane: function () {
+    _drawActionPane:         function () {
         this.paneElement = document.createElement('div');
 
         shadowUI.addClass(this.paneElement, 'pane');
         shadowUI.getRoot().appendChild(this.paneElement);
     },
-    init:            function () {
+    init:                    function () {
         this._drawActionPane();
         this._renderNotes();
     }
