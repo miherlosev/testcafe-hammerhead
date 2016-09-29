@@ -21,6 +21,7 @@ import { STYLESHEET_PROCESSING_START_COMMENT, STYLESHEET_PROCESSING_END_COMMENT 
 import isJQueryObj from './utils/is-jquery-object';
 import extend from './utils/extend';
 import INTERNAL_PROPS from '../processing/dom/internal-properties';
+import defineProperty from './utils/define-property';
 
 class Hammerhead {
     constructor () {
@@ -85,15 +86,16 @@ class Hammerhead {
         };
 
         this.utils = {
-            browser:     browserUtils,
-            dom:         domUtils,
-            event:       eventUtils,
-            position:    positionUtils,
-            style:       styleUtils,
-            types:       typeUtils,
-            trim:        trim,
-            isJQueryObj: isJQueryObj,
-            extend:      extend
+            browser:        browserUtils,
+            dom:            domUtils,
+            event:          eventUtils,
+            position:       positionUtils,
+            style:          styleUtils,
+            types:          typeUtils,
+            trim:           trim,
+            isJQueryObj:    isJQueryObj,
+            extend:         extend,
+            defineProperty: defineProperty
         };
     }
 
@@ -192,7 +194,7 @@ var hammerhead = new Hammerhead();
 
 // NOTE: The 'load' event is raised after calling document.close for a same-domain iframe
 // So, we need to define the '%hammerhead%' variable as 'configurable' so that it can be redefined.
-Object.defineProperty(window, INTERNAL_PROPS.hammerheadPropertyName, {
+defineProperty(window, INTERNAL_PROPS.hammerheadPropertyName, {
     value:        hammerhead,
     configurable: true
 });

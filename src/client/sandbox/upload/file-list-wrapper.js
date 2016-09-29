@@ -1,6 +1,8 @@
+import defineProperty from '../../utils/define-property';
+
 export default class FileListWrapper {
     constructor (fileList) {
-        Object.defineProperty(this, 'length', {
+        defineProperty(this, 'length', {
             get: () => fileList.length
         });
 

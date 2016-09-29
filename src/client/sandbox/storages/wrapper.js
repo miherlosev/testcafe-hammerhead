@@ -2,6 +2,7 @@ import EventEmitter from '../../utils/event-emitter';
 import { isIE } from '../../utils/browser';
 import { parseProxyUrl } from '../../utils/url';
 import * as destLocation from '../../utils/destination-location';
+import defineProperty from '../../utils/define-property';
 
 const STORAGES_SANDBOX_TEMP = 'hammerhead|storages-sandbox-temp';
 const API_KEY_PREFIX        = 'hammerhead|api-key-prefix|';
@@ -23,7 +24,7 @@ export default class StorageWrapper extends EventEmitter {
         this.STORAGE_CHANGED_EVENT = 'hammerhead|event|storage-changed';
         this.EMPTY_OLD_VALUE_ARG   = isIE ? '' : null;
 
-        Object.defineProperty(this, 'length', {
+        defineProperty(this, 'length', {
             get: () => this._getAddedProperties().length,
             set: () => void 0
         });

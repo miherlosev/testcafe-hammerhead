@@ -5,6 +5,7 @@ import { getProxyUrl, parseProxyUrl } from '../utils/url';
 import { getOrigin, sameOriginCheck, get as getDestLocation } from '../utils/destination-location';
 import { isFetchHeaders, isFetchRequest } from '../utils/dom';
 import { SAME_ORIGIN_CHECK_FAILED_STATUS_CODE } from '../../request-pipeline/xhr/same-origin-policy';
+import defineProperty from '../utils/define-property';
 
 export default class FetchSandbox extends SandboxBase {
     constructor () {
@@ -71,7 +72,7 @@ export default class FetchSandbox extends SandboxBase {
                 if (response.status === 500)
                     throw new TypeError();
 
-                Object.defineProperty(response, 'type', {
+                defineProperty(response, 'type', {
                     get:          () => FetchSandbox._getResponseType(response),
                     set:          () => void 0,
                     configurable: true
@@ -79,7 +80,7 @@ export default class FetchSandbox extends SandboxBase {
 
                 var responseStatus = response.status === SAME_ORIGIN_CHECK_FAILED_STATUS_CODE ? 0 : response.status;
 
-                Object.defineProperty(response, 'status', {
+                defineProperty(response, 'status', {
                     get:          () => responseStatus,
                     set:          () => void 0,
                     configurable: true

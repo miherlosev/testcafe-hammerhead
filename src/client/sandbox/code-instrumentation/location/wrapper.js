@@ -2,6 +2,7 @@ import createPropertyDesc from '../../../utils/create-property-desc';
 import { get as getDestLocation, getParsed as getParsedDestLocation } from '../../../utils/destination-location';
 import { getProxyUrl, changeDestUrlPart, parseProxyUrl, parseResourceType, isChangedOnlyHash } from '../../../utils/url';
 import { getDomain, getResourceTypeString } from '../../../../utils/url';
+import defineProperty from '../../../utils/define-property';
 
 function getLocationUrl (window) {
     try {
@@ -37,7 +38,7 @@ export default class LocationWrapper {
         };
         var urlProps       = ['port', 'host', 'hostname', 'pathname', 'protocol'];
 
-        Object.defineProperty(this, 'href', createPropertyDesc({
+        defineProperty(this, 'href', createPropertyDesc({
             get: getHref,
             set: href => {
                 window.location.href = getProxiedHref(href);
@@ -46,7 +47,7 @@ export default class LocationWrapper {
             }
         }));
 
-        Object.defineProperty(this, 'search', createPropertyDesc({
+        defineProperty(this, 'search', createPropertyDesc({
             get: () => window.location.search,
             set: search => {
                 window.location = changeDestUrlPart(window.location.toString(), 'search', search, resourceType);
@@ -55,12 +56,12 @@ export default class LocationWrapper {
             }
         }));
 
-        Object.defineProperty(this, 'origin', createPropertyDesc({
+        defineProperty(this, 'origin', createPropertyDesc({
             get: () => getDomain(getParsedDestLocation()),
             set: origin => origin
         }));
 
-        Object.defineProperty(this, 'hash', createPropertyDesc({
+        defineProperty(this, 'hash', createPropertyDesc({
             get: () => window.location.hash,
             set: hash => {
                 window.location.hash = hash;
@@ -79,7 +80,7 @@ export default class LocationWrapper {
     }
 
     static _defineUrlProp (wrapper, window, prop, resourceType) {
-        Object.defineProperty(wrapper, prop, createPropertyDesc({
+        defineProperty(wrapper, prop, createPropertyDesc({
             get: () => getParsedDestLocation()[prop],
             set: value => {
                 window.location = changeDestUrlPart(window.location.toString(), prop, value, resourceType);

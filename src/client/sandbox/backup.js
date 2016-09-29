@@ -1,7 +1,7 @@
 import { getTopSameDomainWindow, getFrameElement } from '../utils/dom';
+import defineProperty from '../utils/define-property';
 
 const SANDBOX_BACKUP = 'hammerhead|sandbox-backup';
-
 
 function findRecord (storage, iframe) {
     for (var i = storage.length - 1; i >= 0; i--) {
@@ -24,7 +24,7 @@ export function create (window, sandbox) {
 
     if (!storage) {
         storage = [];
-        Object.defineProperty(topSameDomainWindow, SANDBOX_BACKUP, { value: storage });
+        defineProperty(topSameDomainWindow, SANDBOX_BACKUP, { value: storage });
     }
 
     var record = findRecord(storage, iframe);

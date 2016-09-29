@@ -98,15 +98,15 @@ if (window.fetch) {
         // with the 'no-cors' mode
         // see https://fetch.spec.whatwg.org/#concept-headers-guard
         // https://fetch.spec.whatwg.org/#cors-safelisted-request-header
-        QUnit.skip('same-domain', function () {
-            fetch('/xhr-test/100', { mode: 'no-cors' })
-                .then(function (response) {
-                    strictEqual(response.status, 0);
-                    strictEqual(response.type, 'opaque');
-
-                    start();
-                });
-        });
+        // QUnit.skip('same-domain', function () {
+        //     fetch('/xhr-test/100', { mode: 'no-cors' })
+        //         .then(function (response) {
+        //             strictEqual(response.status, 0);
+        //             strictEqual(response.type, 'opaque');
+        //
+        //             start();
+        //         });
+        // });
 
         module('same-origin');
 

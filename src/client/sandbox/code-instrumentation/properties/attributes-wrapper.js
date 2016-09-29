@@ -2,6 +2,7 @@ import { isHammerheadAttr } from '../../../utils/dom';
 import { getStoredAttrName } from '../../../dom-processor';
 import fnBind from '../../../utils/fn-bind';
 import nativeMethods from '../../native-methods';
+import defineProperty from '../../../utils/define-property';
 
 export default class AttributesWrapper {
     constructor (attributes) {
@@ -16,15 +17,15 @@ export default class AttributesWrapper {
                 if (storedAttrName) {
                     attr       = nativeMethods.cloneNode.call(attr);
                     attr.value = storedAttrName.value;
-                    Object.defineProperty(this, attr.name, { value: attr });
+                    defineProperty(this, attr.name, { value: attr });
                 }
 
-                Object.defineProperty(this, length, { value: attr });
+                defineProperty(this, length, { value: attr });
                 length++;
             }
         }
 
-        Object.defineProperty(this, 'length', { value: length });
+        defineProperty(this, 'length', { value: length });
 
         this.item = index => this[index];
 

@@ -5,6 +5,7 @@ import { isWindow, isLocation } from '../../utils/dom';
 import fastApply from '../../utils/fast-apply';
 import * as typeUtils from '../../utils/types';
 import { getProxyUrl } from '../../utils/url';
+import defineProperty from '../../utils/define-property';
 
 export default class MethodCallInstrumentation extends SandboxBase {
     constructor (messageSandbox) {
@@ -42,7 +43,7 @@ export default class MethodCallInstrumentation extends SandboxBase {
 
         // NOTE: In Google Chrome, iframes whose src contains html code raise the 'load' event twice.
         // So, we need to define code instrumentation functions as 'configurable' so that they can be redefined.
-        Object.defineProperty(window, INSTRUCTION.callMethod, {
+        defineProperty(window, INSTRUCTION.callMethod, {
             value: (owner, methName, args) => {
                 if (typeUtils.isNullOrUndefined(owner))
                     MethodCallInstrumentation._error(`Cannot call method '${methName}' of ${typeUtils.inaccessibleTypeToStr(owner)}`);

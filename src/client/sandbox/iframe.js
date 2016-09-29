@@ -6,6 +6,7 @@ import { isShadowUIElement, isCrossDomainIframe, isElementInDocument, isIframeWi
 import { isFirefox, isWebKit } from '../utils/browser';
 import { isSupportedProtocol } from '../utils/url';
 import { isPageHtml } from '../utils/html';
+import defineProperty from '../utils/define-property';
 
 const IFRAME_WINDOW_INITED = 'hammerhead|iframe-window-inited';
 
@@ -81,7 +82,7 @@ export default class IframeSandbox extends SandboxBase {
                 this._ensureIframeNativeMethodsForIE(iframe);
 
                 // NOTE: Ok, the iframe is fully loaded now, but Hammerhead is not injected.
-                Object.defineProperty(iframe.contentWindow, IFRAME_WINDOW_INITED, { value: true });
+                defineProperty(iframe.contentWindow, IFRAME_WINDOW_INITED, { value: true });
 
                 // NOTE: Raise this internal event to eval the Hammerhead code script.
                 this.emit(this.EVAL_HAMMERHEAD_SCRIPT, { iframe });

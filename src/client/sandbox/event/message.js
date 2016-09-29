@@ -9,6 +9,7 @@ import { isCrossDomainWindows, getTopSameDomainWindow } from '../../utils/dom';
 import { isObjectEventListener } from '../../utils/event';
 import fastApply from '../../utils/fast-apply';
 import fnBind from '../../utils/fn-bind';
+import defineProperty from '../../utils/define-property';
 
 const MESSAGE_TYPE = {
     service: 'hammerhead|service-msg',
@@ -142,7 +143,7 @@ export default class MessageSandbox extends SandboxBase {
 
         // NOTE: In Google Chrome, iframes whose src contains html code raise the 'load' event twice.
         // So, we need to define code instrumentation functions as 'configurable' so that they can be redefined.
-        Object.defineProperty(window, this.RECEIVE_MSG_FN, {
+        defineProperty(window, this.RECEIVE_MSG_FN, {
             value:        onMessageHandler,
             configurable: true
         });

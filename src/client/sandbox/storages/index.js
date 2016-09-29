@@ -5,6 +5,7 @@ import * as destLocation from '../../utils/destination-location';
 import * as nativeMethods from '../native-methods';
 import { getTopSameDomainWindow } from '../../utils/dom';
 import INTERNAL_PROPS from '../../../processing/dom/internal-properties';
+import defineProperty from '../../utils/define-property';
 
 const STORAGE_WRAPPER_PREFIX = 'hammerhead|storage-wrapper|';
 
@@ -74,7 +75,7 @@ export default class StorageSandbox extends SandboxBase {
             var event = new nativeMethods.StorageEvent(type, opts);
 
             if (storedArea) {
-                Object.defineProperty(event, 'storageArea', {
+                defineProperty(event, 'storageArea', {
                     get: () => storedArea,
                     set: () => void 0
                 });

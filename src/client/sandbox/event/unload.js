@@ -4,6 +4,7 @@ import createPropertyDesc from '../../utils/create-property-desc.js';
 import { isFirefox, isIE9, isIE10, isIOS } from '../../utils/browser';
 import * as domUtils from '../../utils/dom';
 import { SUPPORTED_PROTOCOL_RE } from '../../../utils/url';
+import defineProperty from '../../utils/define-property';
 
 export default class UnloadSandbox extends SandboxBase {
     constructor (listeners) {
@@ -45,7 +46,7 @@ export default class UnloadSandbox extends SandboxBase {
 
         if (eventObj) {
             // NOTE: Overriding the returnValue property to prevent a native dialog.
-            Object.defineProperty(eventObj, 'returnValue', createPropertyDesc({
+            defineProperty(eventObj, 'returnValue', createPropertyDesc({
                 get: () => this.storedBeforeUnloadReturnValue,
                 set: value => {
                     // NOTE: In all browsers, if the property is set to any value, unload is prevented. In FireFox,
@@ -56,7 +57,7 @@ export default class UnloadSandbox extends SandboxBase {
                 }
             }));
 
-            Object.defineProperty(eventObj, 'preventDefault', createPropertyDesc({
+            defineProperty(eventObj, 'preventDefault', createPropertyDesc({
                 get: () => () => {
                     this.prevented = true;
 

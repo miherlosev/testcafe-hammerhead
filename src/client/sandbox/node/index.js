@@ -7,6 +7,7 @@ import FocusBlurSandbox from '../event/focus-blur';
 import domProcessor from '../../dom-processor';
 import * as domUtils from '../../utils/dom';
 import getNativeQuerySelectorAll from '../../utils/get-native-query-selector-all';
+import defineProperty from '../../utils/define-property';
 
 const ATTRIBUTE_SELECTOR_REG_EX = /\[([\w-]+)(\^?=.+?)]/g;
 
@@ -17,7 +18,7 @@ export default class NodeSandbox extends SandboxBase {
         this.raiseBodyCreatedEvent = this._onBodyCreated;
 
         // NOTE: We need to define the property with the 'writable' descriptor for testing purposes
-        Object.defineProperty(document, INTERNAL_PROPS.documentCharset, {
+        defineProperty(document, INTERNAL_PROPS.documentCharset, {
             value:    domUtils.parseDocumentCharset(),
             writable: true
         });
@@ -84,7 +85,7 @@ export default class NodeSandbox extends SandboxBase {
 
         // NOTE: In Google Chrome, iframes whose src contains html code raise the 'load' event twice.
         // So, we need to define code instrumentation functions as 'configurable' so that they can be redefined.
-        Object.defineProperty(window, INTERNAL_PROPS.processDomMethodName, {
+        defineProperty(window, INTERNAL_PROPS.processDomMethodName, {
             value:        (el, doc) => this.processNodes(el, doc),
             configurable: true
         });

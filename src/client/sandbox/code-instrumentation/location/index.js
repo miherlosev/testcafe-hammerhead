@@ -5,6 +5,7 @@ import INSTRUCTION from '../../../../processing/script/instruction';
 import * as destLocation from '../../../utils/destination-location';
 import { getResourceTypeString } from '../../../../utils/url';
 import * as urlUtils from '../../../utils/url';
+import defineProperty from '../../../utils/define-property';
 
 const LOCATION_WRAPPER = 'hammerhead|location-wrapper';
 
@@ -32,19 +33,19 @@ export default class LocationAccessorsInstrumentation extends SandboxBase {
 
         // NOTE: In Google Chrome, iframes whose src contains html code raise the 'load' event twice.
         // So, we need to define code instrumentation functions as 'configurable' so that they can be redefined.
-        Object.defineProperty(window, LOCATION_WRAPPER, {
+        defineProperty(window, LOCATION_WRAPPER, {
             value:        locationWrapper,
             configurable: true
         });
-        Object.defineProperty(window.document, LOCATION_WRAPPER, {
+        defineProperty(window.document, LOCATION_WRAPPER, {
             value:        locationWrapper,
             configurable: true
         });
-        Object.defineProperty(window, INSTRUCTION.getLocation, {
+        defineProperty(window, INSTRUCTION.getLocation, {
             value:        location => isLocation(location) ? locationWrapper : location,
             configurable: true
         });
-        Object.defineProperty(window, INSTRUCTION.setLocation, {
+        defineProperty(window, INSTRUCTION.setLocation, {
             value: (location, value) => {
                 if (isLocation(location)) {
                     var resourceType = null;

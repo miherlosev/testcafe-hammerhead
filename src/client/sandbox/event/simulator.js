@@ -6,6 +6,7 @@ import * as domUtils from '../../utils/dom';
 import * as eventUtils from '../../utils/event';
 import { getOffsetPosition, offsetToClientCoords } from '../../utils/position';
 import { getBordersWidth, getElementScroll } from '../../utils/style';
+import defineProperty from '../../utils/define-property';
 
 const IE_BUTTONS_MAP = {
     0: 1,
@@ -43,13 +44,13 @@ export default class EventSimulator {
         ev.initStorageEvent('storage', args.canBubble, args.cancelable, args.key, args.oldValue,
             args.newValue, args.url, null);
 
-        Object.defineProperty(ev, 'storageArea', {
+        defineProperty(ev, 'storageArea', {
             get:          () => args.storageArea,
             configurable: true
         });
 
         if (args.key === null) {
-            Object.defineProperty(ev, 'key', {
+            defineProperty(ev, 'key', {
                 get:          () => null,
                 configurable: true
             });
@@ -257,7 +258,7 @@ export default class EventSimulator {
                 this.savedWindowEvents.shift();
 
             if (this.savedWindowEvents.length) {
-                Object.defineProperty(curWindow, 'event', {
+                defineProperty(curWindow, 'event', {
                     get:          () => this.savedWindowEvents[0],
                     configurable: true
                 });
@@ -267,7 +268,7 @@ export default class EventSimulator {
         // NOTE: Window.event becomes empty when the click event handler
         // triggers the click event for a different element in IE11.(GH-226).
         if (browserUtils.isIE11 && prevWindowEvent) {
-            Object.defineProperty(curWindow, 'event', {
+            defineProperty(curWindow, 'event', {
                 get:          () => prevWindowEvent,
                 configurable: true
             });
@@ -356,17 +357,17 @@ export default class EventSimulator {
                 pArgs.hwTimestampArg, pArgs.isPrimary);
 
             // NOTE: After dispatching the pointer event, it doesn't contain the 'target' and 'relatedTarget' properties.
-            Object.defineProperty(pointEvent, 'target', {
+            defineProperty(pointEvent, 'target', {
                 get:          () => el,
                 configurable: true
             });
 
-            Object.defineProperty(pointEvent, 'relatedTarget', {
+            defineProperty(pointEvent, 'relatedTarget', {
                 get:          () => args.relatedTarget,
                 configurable: true
             });
 
-            Object.defineProperty(pointEvent, 'buttons', {
+            defineProperty(pointEvent, 'buttons', {
                 get: () => args.buttons
             });
 
@@ -379,14 +380,14 @@ export default class EventSimulator {
             args.button, args.relatedTarget);
 
         if (browserUtils.isFirefox || browserUtils.isIE) {
-            Object.defineProperty(ev, 'buttons', {
+            defineProperty(ev, 'buttons', {
                 get: () => args.buttons
             });
         }
 
         // NOTE: T188166 (act.hover triggers the mouseenter event with the "which" parameter set to 1).
         if (args.which !== void 0 && browserUtils.isWebKit) {
-            Object.defineProperty(ev, INTERNAL_PROPS.whichPropertyWrapper, {
+            defineProperty(ev, INTERNAL_PROPS.whichPropertyWrapper, {
                 get: () => args.which
             });
         }
@@ -397,11 +398,11 @@ export default class EventSimulator {
             var currentDocument = domUtils.findDocument(el);
             var documentScroll  = getElementScroll(currentDocument);
 
-            Object.defineProperty(ev, 'pageX', {
+            defineProperty(ev, 'pageX', {
                 get: () => ev.clientX + documentScroll.left
             });
 
-            Object.defineProperty(ev, 'pageY', {
+            defineProperty(ev, 'pageY', {
                 get: () => ev.clientY + documentScroll.top
             });
         }
@@ -475,7 +476,7 @@ export default class EventSimulator {
                     args.button = button;
                 }
 
-                Object.defineProperty(curWindow, 'event', {
+                defineProperty(curWindow, 'event', {
                     get:          () => this.savedWindowEvents[0],
                     configurable: true
                 });
@@ -483,7 +484,7 @@ export default class EventSimulator {
                 var cancelBubble = false;
 
                 if (curWindowEvent) {
-                    Object.defineProperty(curWindowEvent, 'returnValue', {
+                    defineProperty(curWindowEvent, 'returnValue', {
                         get: () => returnValue,
                         set: value => {
                             if (value === false)
@@ -495,7 +496,7 @@ export default class EventSimulator {
                         configurable: true
                     });
 
-                    Object.defineProperty(curWindowEvent, 'cancelBubble', {
+                    defineProperty(curWindowEvent, 'cancelBubble', {
                         get: () => cancelBubble,
                         set: value => {
                             ev.cancelBubble = cancelBubble = value;
@@ -507,11 +508,11 @@ export default class EventSimulator {
                     });
 
                     if (curWindowEvent.type === 'mouseout' || curWindowEvent.type === 'mouseover') {
-                        Object.defineProperty(curWindowEvent, 'fromElement', {
+                        defineProperty(curWindowEvent, 'fromElement', {
                             get:          () => curWindowEvent.type === 'mouseout' ? el : args.relatedTarget,
                             configurable: true
                         });
-                        Object.defineProperty(curWindowEvent, 'toElement', {
+                        defineProperty(curWindowEvent, 'toElement', {
                             get:          () => curWindowEvent.type === 'mouseover' ? el : args.relatedTarget,
                             configurable: true
                         });
@@ -532,7 +533,7 @@ export default class EventSimulator {
             // NOTE: In IE11, iframe's window.event object is null. We need to set
             // iframe's window.event object manually by using window.event (B254199).
             if (browserUtils.version === 11 && iframe) {
-                Object.defineProperty(iframe.contentWindow, 'event', {
+                defineProperty(iframe.contentWindow, 'event', {
                     get:          () => window.event,
                     configurable: true
                 });

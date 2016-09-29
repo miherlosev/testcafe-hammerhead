@@ -26,6 +26,7 @@ import INSTRUCTION from '../../../../processing/script/instruction';
 import { shouldInstrumentProperty } from '../../../../processing/script/instrumented';
 import nativeMethods from '../../native-methods';
 import { emptyActionAttrFallbacksToTheLocation } from '../../../utils/feature-detection';
+import defineProperty from '../../../utils/define-property';
 
 const ORIGINAL_WINDOW_ON_ERROR_HANDLER_KEY = 'hammerhead|original-window-on-error-handler-key';
 
@@ -752,7 +753,7 @@ export default class PropertyAccessorsInstrumentation extends SandboxBase {
 
         // NOTE: In Google Chrome, iframes whose src contains html code raise the 'load' event twice.
         // So, we need to define code instrumentation functions as 'configurable' so that they can be redefined.
-        Object.defineProperty(window, INSTRUCTION.getProperty, {
+        defineProperty(window, INSTRUCTION.getProperty, {
             value: (owner, propName) => {
                 if (typeUtils.isNullOrUndefined(owner))
                     PropertyAccessorsInstrumentation._error(`Cannot read property '${propName}' of ${typeUtils.inaccessibleTypeToStr(owner)}`);
@@ -767,7 +768,7 @@ export default class PropertyAccessorsInstrumentation extends SandboxBase {
             configurable: true
         });
 
-        Object.defineProperty(window, INSTRUCTION.setProperty, {
+        defineProperty(window, INSTRUCTION.setProperty, {
             value: (owner, propName, value) => {
                 if (typeUtils.isNullOrUndefined(owner))
                     PropertyAccessorsInstrumentation._error(`Cannot set property '${propName}' of ${typeUtils.inaccessibleTypeToStr(owner)}`);
