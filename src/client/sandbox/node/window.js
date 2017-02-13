@@ -59,9 +59,14 @@ export default class WindowSandbox extends SandboxBase {
         }
     }
 
+    _isVisibleImgLoaded (img) {
+        return img.complete && img.naturalWidth && img.naturalHeight;
+    }
+
     attach (window) {
         super.attach(window);
 
+        var sandbox        = this;
         var messageSandbox = this.messageSandbox;
         var nodeSandbox    = this.nodeSandbox;
 
@@ -80,7 +85,16 @@ export default class WindowSandbox extends SandboxBase {
                 var src         = image.src;
 
                 if (destLocation.sameOriginCheck(location.toString(), src)) {
-                    changedArgs[0]     = nativeMethods.createElement.call(window.document, 'img');
+                    var needRedrawImg = sandbox.__isVisibleImgLoaded(image);
+
+                    changedArgs[0] = nativeMethods.createElement.call(window.document, 'img');
+
+                    if (needRedrawImg) {
+                        changedArgs[0].addEvenListener('load', function () {
+                            return nativeMethods.canvasContextDrawImage.apply(this, changedArgs || arguments);
+                        });
+                    }
+
                     changedArgs[0].src = getProxyUrl(src);
                 }
             }
