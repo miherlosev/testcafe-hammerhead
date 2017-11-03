@@ -187,7 +187,7 @@ export default class ElementSandbox extends SandboxBase {
 
                     if (ElementSandbox._isHrefAttrForBaseElement(el, attr) &&
                         domUtils.isElementInDocument(el, this.document))
-                        urlResolver.updateBase(value, this.document);
+                        urlResolver.updateBase(el, value, this.document);
 
                     args[valueIndex] = isIframe && isCrossDomainUrl ? urlUtils.getCrossDomainIframeProxyUrl(value) :
                                        urlUtils.getProxyUrl(value, { resourceType, charset: elCharset });
@@ -292,7 +292,7 @@ export default class ElementSandbox extends SandboxBase {
         }
 
         if (ElementSandbox._isHrefAttrForBaseElement(el, formatedAttr))
-            urlResolver.updateBase(getDestLocation(), this.document);
+            urlResolver.updateBase(el, getDestLocation(), this.document);
 
         if (formatedAttr !== 'autocomplete')
             result = removeAttrFunc.apply(el, args);
@@ -603,7 +603,7 @@ export default class ElementSandbox extends SandboxBase {
             const storedHrefAttrName  = domProcessor.getStoredAttrName('href');
             const storedHrefAttrValue = el.getAttribute(storedHrefAttrName);
 
-            urlResolver.updateBase(storedHrefAttrValue, this.document);
+            urlResolver.updateBase(el, storedHrefAttrValue, this.document);
         }
     }
 
@@ -612,7 +612,7 @@ export default class ElementSandbox extends SandboxBase {
             this.shadowUI.onBodyElementMutation();
 
         else if (domUtils.isBaseElement(el))
-            urlResolver.updateBase(getDestLocation(), this.document);
+            urlResolver.updateBase(el, getDestLocation(), this.document);
 
         DOMMutationTracker.onElementChanged(el);
     }
@@ -749,7 +749,7 @@ export default class ElementSandbox extends SandboxBase {
                 this.iframeSandbox.processIframe(el);
                 break;
             case 'base':
-                urlResolver.updateBase(nativeMethods.getAttribute.call(el, domProcessor.getStoredAttrName('href')), this.document);
+                urlResolver.updateBase(el, nativeMethods.getAttribute.call(el, domProcessor.getStoredAttrName('href')), this.document);
                 break;
         }
 

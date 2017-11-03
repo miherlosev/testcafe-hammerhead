@@ -31,8 +31,20 @@ export default {
         return doc[DOCUMENT_URL_RESOLVER];
     },
 
+    _shouldUpdate (el, doc) {
+        if (!el)
+            return true;
+
+        const baseElements = nativeMethods.getElementsByTagName.call(doc, 'base');
+
+        if (!baseElements.length)
+            return true;
+
+        return baseElements[0] === el;
+    },
+
     init (doc) {
-        this.updateBase(destLocation.get(), doc);
+        this.updateBase(null, destLocation.get(), doc);
     },
 
     getResolverElement (doc) {
@@ -60,7 +72,10 @@ export default {
         return ensureTrailingSlash(url, resolver.href);
     },
 
-    updateBase (url, doc) {
+    updateBase (el, url, doc) {
+        if (!this._shouldUpdate(el, doc))
+            return;
+
         const resolverDocument = this._getResolver(doc);
         const baseElement      = nativeMethods.elementGetElementsByTagName.call(resolverDocument.head, 'base')[0];
 
@@ -73,7 +88,7 @@ export default {
         if (isRelativeUrl || isProtocolRelativeUrl) {
             const destinationLocation = destLocation.get();
 
-            this.updateBase(destinationLocation, doc);
+            this.updateBase(null, destinationLocation, doc);
             url = this.resolve(url, doc);
         }
 

@@ -266,7 +266,7 @@ if (window.history.replaceState && window.history.pushState) {
                 var iframeLocation      = iframeWindow.location;
                 var baseUrl             = 'http://' + location.host + '/some/path';
 
-                iframeHammerhead.get('./utils/url-resolver').updateBase(baseUrl, iframe.contentDocument);
+                iframeHammerhead.get('./utils/url-resolver').updateBase(null, baseUrl, iframe.contentDocument);
                 iframeHammerhead.get('./utils/destination-location')
                     .forceLocation('http://' + iframeLocation.host + '/sessionId/' + baseUrl);
 

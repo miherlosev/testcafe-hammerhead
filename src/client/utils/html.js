@@ -215,7 +215,7 @@ export function processHtml (html, parentTag, prepareDom) {
         const base = nativeMethods.elementQuerySelector.call(container, 'base');
 
         if (base)
-            urlResolver.updateBase(nativeMethods.getAttribute.call(base, 'href'), document);
+            urlResolver.updateBase(base, nativeMethods.getAttribute.call(base, 'href'), document);
 
         for (const child of children) {
             if (isScriptElement(child))
@@ -234,7 +234,7 @@ export function processHtml (html, parentTag, prepareDom) {
                 htmlElement.innerHTML = INIT_SCRIPT_FOR_IFRAME_TEMPLATE + htmlElement.innerHTML;
         }
 
-        urlResolver.updateBase(storedBaseUrl, document);
+        urlResolver.updateBase(null, storedBaseUrl, document);
 
         return true;
     });

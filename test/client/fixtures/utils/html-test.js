@@ -319,12 +319,12 @@ test('process html with an unclosed "p" tag and the "header" tag (GH-688)', func
 });
 
 test('get a proxy url from a relative url after html processing (GH-718)', function () {
-    urlResolver.updateBase('http://example.com/path/path/', document);
+    urlResolver.updateBase(null, 'http://example.com/path/path/', document);
     htmlUtils.processHtml('<div></div>');
     strictEqual(urlUtils.getProxyUrl('index.html', {
         proxyHostname: '127.0.0.1',
         proxyPort:     1337,
         sessionId:     'sessionId'
     }), 'http://127.0.0.1:1337/sessionId/http://example.com/path/path/index.html');
-    urlResolver.updateBase(null, document);
+    urlResolver.updateBase(null, null, document);
 });
