@@ -144,12 +144,17 @@ export default class NodeSandbox extends SandboxBase {
         if (!ATTRIBUTE_SELECTOR_REG_EX.test(selector))
             return selector;
 
+        const hasPartsSeparatedByORCondition = selector.indexOf(',') !== -1;
+
         return selector.replace(ATTRIBUTE_SELECTOR_REG_EX, (str, name, operatorWithValue) => {
             if (domProcessor.URL_ATTRS.indexOf(name) !== -1 &&
                 !ATTRIBUTE_OPERATOR_WITH_HASH_VALUE.test(operatorWithValue)) {
-                name = getStoredAttrName(name);
+                const storedAttrName = getStoredAttrName(name);
 
-                return '[' + name + operatorWithValue + ']';
+                if (!hasPartsSeparatedByORCondition)
+                    return `[${storedAttrName + operatorWithValue}],[${name + operatorWithValue}]`;
+
+                return `[${storedAttrName + operatorWithValue}]`;
             }
 
             return str;

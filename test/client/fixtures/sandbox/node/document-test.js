@@ -1,6 +1,7 @@
 var processScript       = hammerhead.get('../processing/script').processScript;
 var SHADOW_UI_CLASSNAME = hammerhead.get('../shadow-ui/class-name');
 var INTERNAL_PROPS      = hammerhead.get('../processing/dom/internal-properties');
+var NodeSandbox         = hammerhead.get('./sandbox/node');
 
 var browserUtils  = hammerhead.utils.browser;
 var nativeMethods = hammerhead.nativeMethods;
@@ -279,6 +280,29 @@ test('parameters passed to the native function in its original form', function (
 
     hammerhead.sandbox.node.doc._beforeDocumentCleaned = storedBeforeDocumentCleaned;
     nativeMethods.restoreDocumentMeths                 = storedRestoreDocumentMeths;
+});
+
+test('NodeSandbox.processSelector (GH-1435)', function () {
+    strictEqual(NodeSandbox.processSelector('[test=3]'), '[test=3]');
+    strictEqual(NodeSandbox.processSelector('[href=index.html]'), '[href-hammerhead-stored-value=index.html],[href=index.html]');
+    strictEqual(NodeSandbox.processSelector('[href=index.html],[alt]'), '[href-hammerhead-stored-value=index.html],[alt]');
+});
+
+test('search by url attribute with non-proxied value (GH-1435)', function () {
+    var container = document.createElement('div');
+    var input     = document.createElement('input');
+
+    container.id = 'container_1';
+    input.setAttribute('data', 'container_1');
+    container.appendChild(input);
+    document.body.appendChild(container);
+
+    var querySelectorAllResult = document.body.querySelectorAll('#container_1 [data=container_1]');
+    var querySelectorResult    = document.body.querySelector('#container_1 [data=container_1]');
+
+    strictEqual(querySelectorAllResult.length, 1);
+    ok(querySelectorResult);
+    container.parentNode.removeChild(container);
 });
 
 module('resgression');
