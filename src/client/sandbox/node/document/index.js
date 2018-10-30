@@ -93,6 +93,7 @@ export default class DocumentSandbox extends SandboxBase {
         super.attach(window, document);
 
         const documentSandbox = this;
+        const docPrototype    = window.Document.prototype;
 
         document.open = (...args) => {
             const isUninitializedIframe = this._isUninitializedIframeWithoutSrc(window);
@@ -129,7 +130,7 @@ export default class DocumentSandbox extends SandboxBase {
             // restore the overrided document.open and document.write methods before Hammerhead injection, if the
             // window is not initialized.
             if (isIE && !IframeSandbox.isWindowInited(window))
-                nativeMethods.restoreDocumentMeths(document);
+                nativeMethods.restoreDocumentMeths(document, window);
 
             // NOTE: IE doesn't run scripts in iframe if iframe.documentContent.designMode equals 'on' (GH-871)
             if (typeof document.designMode === 'string' && document.designMode.toLowerCase() === 'on')
@@ -143,7 +144,7 @@ export default class DocumentSandbox extends SandboxBase {
             return result;
         };
 
-        document.createElement = (...args) => {
+        docPrototype.createElement = (...args) => {
             const el = nativeMethods.createElement.apply(document, args);
 
             DocumentSandbox.forceProxySrcForImageIfNecessary(el);
@@ -179,7 +180,6 @@ export default class DocumentSandbox extends SandboxBase {
             return fragment;
         };
 
-        const docPrototype     = window.Document.prototype;
         const htmlDocPrototype = window.HTMLDocument.prototype;
         let storedDomain       = '';
 

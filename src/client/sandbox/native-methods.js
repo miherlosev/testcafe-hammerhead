@@ -20,42 +20,40 @@ class NativeMethods {
         doc = doc || document;
         win = win || window;
 
-        const docProto = doc.constructor.prototype;
+        const docPrototype = win.Document.prototype;
 
         // Dom
-        this.createDocumentFragment = doc.createDocumentFragment || docProto.createDocumentFragment;
-        this.createElement          = doc.createElement || docProto.createElement;
-        this.createElementNS        = doc.createElementNS || docProto.createElementNS;
-        this.documentOpen           = doc.open || docProto.open;
-        this.documentClose          = doc.close || docProto.close;
-        this.documentWrite          = doc.write || docProto.write;
-        this.documentWriteLn        = doc.writeln || docProto.writeln;
-        this.elementFromPoint       = doc.elementFromPoint || docProto.elementFromPoint;
-        this.caretRangeFromPoint    = doc.caretRangeFromPoint || docProto.caretRangeFromPoint;
-        this.caretPositionFromPoint = doc.caretPositionFromPoint || docProto.caretPositionFromPoint;
-        this.getElementById         = doc.getElementById || docProto.getElementById;
-        this.getElementsByClassName = doc.getElementsByClassName || docProto.getElementsByClassName;
-        this.getElementsByName      = doc.getElementsByName || docProto.getElementsByName;
+        this.createDocumentFragment = doc.createDocumentFragment || docPrototype.createDocumentFragment;
+        this.createElement          = docPrototype.createElement || doc.createElement;
+        this.createElementNS        = doc.createElementNS || docPrototype.createElementNS;
+        this.documentOpen           = doc.open || docPrototype.open;
+        this.documentClose          = doc.close || docPrototype.close;
+        this.documentWrite          = doc.write || docPrototype.write;
+        this.documentWriteLn        = doc.writeln || docPrototype.writeln;
+        this.elementFromPoint       = doc.elementFromPoint || docPrototype.elementFromPoint;
+        this.caretRangeFromPoint    = doc.caretRangeFromPoint || docPrototype.caretRangeFromPoint;
+        this.caretPositionFromPoint = doc.caretPositionFromPoint || docPrototype.caretPositionFromPoint;
+        this.getElementById         = doc.getElementById || docPrototype.getElementById;
+        this.getElementsByClassName = doc.getElementsByClassName || docPrototype.getElementsByClassName;
+        this.getElementsByName      = doc.getElementsByName || docPrototype.getElementsByName;
 
-        this.getElementsByTagName = doc.getElementsByTagName || docProto.getElementsByTagName;
-        this.querySelector        = doc.querySelector || docProto.querySelector;
-        this.querySelectorAll     = doc.querySelectorAll || docProto.querySelectorAll;
+        this.getElementsByTagName = doc.getElementsByTagName || docPrototype.getElementsByTagName;
+        this.querySelector        = doc.querySelector || docPrototype.querySelector;
+        this.querySelectorAll     = doc.querySelectorAll || docPrototype.querySelectorAll;
 
         this.createHTMLDocument = win.DOMImplementation.prototype.createHTMLDocument;
 
         if (doc.registerElement)
-            this.registerElement = doc.registerElement || docProto.registerElement;
+            this.registerElement = doc.registerElement || docPrototype.registerElement;
 
         // Event
-        this.documentAddEventListener    = doc.addEventListener || docProto.addEventListener;
-        this.documentRemoveEventListener = doc.removeEventListener || docProto.removeEventListener;
-        this.documentCreateEvent         = doc.createEvent || docProto.createEvent;
-        this.documentCreateTouch         = doc.createTouch || docProto.createTouch;
-        this.documentCreateTouchList     = doc.createTouchList || docProto.createTouchList;
+        this.documentAddEventListener    = doc.addEventListener || docPrototype.addEventListener;
+        this.documentRemoveEventListener = doc.removeEventListener || docPrototype.removeEventListener;
+        this.documentCreateEvent         = doc.createEvent || docPrototype.createEvent;
+        this.documentCreateTouch         = doc.createTouch || docPrototype.createTouch;
+        this.documentCreateTouchList     = doc.createTouchList || docPrototype.createTouchList;
 
         // getters/setters
-        const docPrototype = win.Document.prototype;
-
         this.documentCookiePropOwnerName  = NativeMethods._getDocumentPropOwnerName(docPrototype, 'cookie');
         this.documentScriptsPropOwnerName = NativeMethods._getDocumentPropOwnerName(docPrototype, 'scripts');
 
@@ -605,9 +603,11 @@ class NativeMethods {
         return true;
     }
 
-    restoreDocumentMeths (document) {
+    restoreDocumentMeths (document, window) {
+        const docProto = window.Document.prototype;
+
         document.createDocumentFragment = this.createDocumentFragment;
-        document.createElement          = this.createElement;
+        docProto.createElement          = this.createElement;
         document.createElementNS        = this.createElementNS;
         document.open                   = this.documentOpen;
         document.close                  = this.documentClose;
