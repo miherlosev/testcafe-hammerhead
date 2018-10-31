@@ -79,27 +79,6 @@ export default class Sandbox extends SandboxBase {
         return true;
     }
 
-    _restoreDocumentMethodsFromProto (document) {
-        const docProto = document.constructor.prototype;
-
-        document.createDocumentFragment = document.createDocumentFragment || docProto.createDocumentFragment;
-        document.createElement          = document.createElement || docProto.createElement;
-        document.createElementNS        = document.createElementNS || docProto.createElementNS;
-        document.open                   = document.open || docProto.open;
-        document.close                  = document.close || docProto.close;
-        document.write                  = document.write || docProto.write;
-        document.writeln                = document.writeln || docProto.writeln;
-        document.elementFromPoint       = document.elementFromPoint || docProto.elementFromPoint;
-        document.getElementById         = document.getElementById || docProto.getElementById;
-        document.getElementsByClassName = document.getElementsByClassName || docProto.getElementsByClassName;
-        document.getElementsByName      = document.getElementsByName || docProto.getElementsByName;
-        document.getElementsByTagName   = document.getElementsByTagName || docProto.getElementsByTagName;
-        document.querySelector          = document.querySelector || docProto.querySelector;
-        document.querySelectorAll       = document.querySelectorAll || docProto.querySelectorAll;
-        document.addEventListener       = document.addEventListener || docProto.addEventListener;
-        document.removeEventListener    = document.removeEventListener || docProto.removeEventListener;
-    }
-
     onIframeDocumentRecreated (iframe) {
         if (iframe) {
             // NOTE: Try to find an existing iframe sandbox.
@@ -144,7 +123,8 @@ export default class Sandbox extends SandboxBase {
         this.node.doc.attach(window, document);
         this.console.attach(window);
 
-        this._restoreDocumentMethodsFromProto(document);
+        if (isIE)
+            this.nativeMethods.restoreDocumentMeths(document, window);
     }
 
     attach (window) {

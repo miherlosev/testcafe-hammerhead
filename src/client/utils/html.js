@@ -110,17 +110,16 @@ export function isPageHtml (html) {
 }
 
 function processHtmlInternal (html, process) {
-    const container = getHtmlDocument().createElement('div');
+    const container = nativeMethods.createElement.call(getHtmlDocument(), 'div');
 
     html = wrapHtmlText(html);
 
     nativeMethods.appendChild.call(htmlParser, container);
-
     nativeMethods.elementInnerHTMLSetter.call(container, html);
 
     let processedHtml = process(container) ? nativeMethods.elementInnerHTMLGetter.call(container) : html;
 
-    container.parentNode.removeChild(container);
+    nativeMethods.removeChild.call(container.parentNode, container);
 
     processedHtml = unwrapHtmlText(processedHtml);
 
