@@ -40,7 +40,7 @@ export default class IframeSandbox extends SandboxBase {
         if (!this.iframeNativeMethodsBackup && this._shouldSaveIframeNativeMethods(iframe))
             this.iframeNativeMethodsBackup = new this.nativeMethods.constructor(iframe.contentDocument, iframe.contentWindow);
         else if (this.iframeNativeMethodsBackup) {
-            this.iframeNativeMethodsBackup.restoreDocumentMeths(iframe.contentDocument, iframe.contentWindow);
+            this.iframeNativeMethodsBackup.restoreDocumentMeths(iframe.contentDocument);
             this.iframeNativeMethodsBackup = null;
         }
     }
@@ -49,7 +49,7 @@ export default class IframeSandbox extends SandboxBase {
         const iframeNativeMethods = iframe.contentWindow[INTERNAL_PROPS.iframeNativeMethods];
 
         if (iframeNativeMethods) {
-            iframeNativeMethods.restoreDocumentMeths(iframe.contentDocument, iframe.contentWindow);
+            iframeNativeMethods.restoreDocumentMeths(iframe.contentDocument);
             delete iframe.contentWindow[INTERNAL_PROPS.iframeNativeMethods];
         }
     }

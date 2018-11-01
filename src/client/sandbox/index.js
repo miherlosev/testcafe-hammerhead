@@ -20,7 +20,7 @@ import StorageSandbox from './storages';
 import ElectronSandbox from './electron';
 import ConsoleSandbox from './console';
 import StyleSandbox from './style';
-import { isIE, isWebKit, isElectron } from '../utils/browser';
+import { isWebKit, isElectron } from '../utils/browser';
 import { dispose as htmlUtilDispose } from '../utils/html';
 import { dispose as anchorCodeInstumentationDispose } from './code-instrumentation/properties/anchor';
 import { create as createSandboxBackup, get as getSandboxBackup } from './backup';
@@ -96,7 +96,7 @@ export default class Sandbox extends SandboxBase {
                 // In this case, we need to inject Hammerhead.
 
                 // HACK: IE10 cleans up overridden methods after the document.write method call.
-                this.nativeMethods.restoreDocumentMeths(iframe.contentDocument, iframe.contentWindow);
+                this.nativeMethods.restoreDocumentMeths(iframe.contentDocument);
 
                 // NOTE: A sandbox for this iframe is not found (iframe is not yet initialized).
                 // Inform IFrameSandbox about this, and it injects Hammerhead.
@@ -107,8 +107,7 @@ export default class Sandbox extends SandboxBase {
 
     reattach (window, document) {
         // NOTE: Assign the existing sandbox to the cleared document.
-        if (isIE)
-            this.nativeMethods.refreshIfNecessary(document, window);
+        this.nativeMethods.refreshIfNecessary(document, window);
 
         urlResolver.init(document);
 
@@ -123,8 +122,9 @@ export default class Sandbox extends SandboxBase {
         this.node.doc.attach(window, document);
         this.console.attach(window);
 
-        if (isIE)
-            this.nativeMethods.restoreDocumentMeths(document, window);
+        // After overriding the `document.open` method, IE demonstrates the strange behaviour:
+        //
+        this.nativeMethods.restoreDocumentMeths(document);
     }
 
     attach (window) {

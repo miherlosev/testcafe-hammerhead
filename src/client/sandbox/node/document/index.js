@@ -95,7 +95,7 @@ export default class DocumentSandbox extends SandboxBase {
         const documentSandbox = this;
         const docPrototype    = window.Document.prototype;
 
-        document.open = (...args) => {
+        docPrototype.open = (...args) => {
             const isUninitializedIframe = this._isUninitializedIframeWithoutSrc(window);
 
             if (!isUninitializedIframe)
@@ -125,12 +125,12 @@ export default class DocumentSandbox extends SandboxBase {
             return result;
         };
 
-        document.close = (...args) => {
+        docPrototype.close = (...args) => {
             // NOTE: IE10 and IE9 raise the "load" event only when the document.close method is called. We need to
-            // restore the overrided document.open and document.write methods before Hammerhead injection, if the
+            // restore the overriden document.open and document.write methods before Hammerhead injection, if the
             // window is not initialized.
-            if (isIE && !IframeSandbox.isWindowInited(window))
-                nativeMethods.restoreDocumentMeths(document, window);
+            // if (isIE && !IframeSandbox.isWindowInited(window))
+            //     nativeMethods.restoreDocumentMeths(document);
 
             // NOTE: IE doesn't run scripts in iframe if iframe.documentContent.designMode equals 'on' (GH-871)
             if (typeof document.designMode === 'string' && document.designMode.toLowerCase() === 'on')
@@ -154,7 +154,7 @@ export default class DocumentSandbox extends SandboxBase {
             return el;
         };
 
-        document.createElementNS = (...args) => {
+        docPrototype.createElementNS = (...args) => {
             const el = nativeMethods.createElementNS.apply(document, args);
 
             DocumentSandbox.forceProxySrcForImageIfNecessary(el);
@@ -164,15 +164,15 @@ export default class DocumentSandbox extends SandboxBase {
             return el;
         };
 
-        document.write = function () {
+        docPrototype.write = function () {
             return documentSandbox._overridedDocumentWrite(arguments);
         };
 
-        document.writeln = function () {
+        docPrototype.writeln = function () {
             return documentSandbox._overridedDocumentWrite(arguments, true);
         };
 
-        document.createDocumentFragment = (...args) => {
+        docPrototype.createDocumentFragment = (...args) => {
             const fragment = nativeMethods.createDocumentFragment.apply(document, args);
 
             documentSandbox.nodeSandbox.processNodes(fragment);

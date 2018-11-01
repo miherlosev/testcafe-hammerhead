@@ -23,13 +23,13 @@ class NativeMethods {
         const docPrototype = win.Document.prototype;
 
         // Dom
-        this.createDocumentFragment = doc.createDocumentFragment || docPrototype.createDocumentFragment;
+        this.createDocumentFragment = docPrototype.createDocumentFragment || doc.createDocumentFragment;
         this.createElement          = docPrototype.createElement || doc.createElement;
-        this.createElementNS        = doc.createElementNS || docPrototype.createElementNS;
-        this.documentOpen           = doc.open || docPrototype.open;
-        this.documentClose          = doc.close || docPrototype.close;
-        this.documentWrite          = doc.write || docPrototype.write;
-        this.documentWriteLn        = doc.writeln || docPrototype.writeln;
+        this.createElementNS        = docPrototype.createElementNS || doc.createElementNS;
+        this.documentOpen           = docPrototype.open || doc.open;
+        this.documentClose          = docPrototype.close || doc.close;
+        this.documentWrite          = docPrototype.write || doc.write;
+        this.documentWriteLn        = docPrototype.writeln || doc.writeln;
         this.elementFromPoint       = doc.elementFromPoint || docPrototype.elementFromPoint;
         this.caretRangeFromPoint    = doc.caretRangeFromPoint || docPrototype.caretRangeFromPoint;
         this.caretPositionFromPoint = doc.caretPositionFromPoint || docPrototype.caretPositionFromPoint;
@@ -603,16 +603,7 @@ class NativeMethods {
         return true;
     }
 
-    restoreDocumentMeths (document, window) {
-        const docProto = window.Document.prototype;
-
-        document.createDocumentFragment = this.createDocumentFragment;
-        docProto.createElement          = this.createElement;
-        document.createElementNS        = this.createElementNS;
-        document.open                   = this.documentOpen;
-        document.close                  = this.documentClose;
-        document.write                  = this.documentWrite;
-        document.writeln                = this.documentWriteLn;
+    restoreDocumentMeths (document) {
         document.elementFromPoint       = this.elementFromPoint;
         document.caretRangeFromPoint    = this.caretRangeFromPoint;
         document.caretPositionFromPoint = this.caretPositionFromPoint;
