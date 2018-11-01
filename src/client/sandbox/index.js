@@ -96,7 +96,7 @@ export default class Sandbox extends SandboxBase {
                 // In this case, we need to inject Hammerhead.
 
                 // HACK: IE10 cleans up overridden methods after the document.write method call.
-                this.nativeMethods.restoreDocumentMeths(iframe.contentDocument);
+                this.nativeMethods.restoreOverridenDocumentMethods(iframe.contentWindow);
 
                 // NOTE: A sandbox for this iframe is not found (iframe is not yet initialized).
                 // Inform IFrameSandbox about this, and it injects Hammerhead.
@@ -123,7 +123,8 @@ export default class Sandbox extends SandboxBase {
         this.console.attach(window);
 
         // After overriding the `document.open` method, IE demonstrates the strange behaviour:
-        //
+        // document lost all methods: 'addEventListener', 'createElement' and etc.
+        // This is why, we are forced to restore non-overriden methods separately
         this.nativeMethods.restoreDocumentMeths(document);
     }
 

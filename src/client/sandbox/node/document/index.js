@@ -46,7 +46,7 @@ export default class DocumentSandbox extends SandboxBase {
         return doc.readyState !== 'loading' && doc.readyState !== 'uninitialized';
     }
 
-    _overridedDocumentWrite (args, ln) {
+    _performDocumentWrite (args, ln) {
         const shouldEmitEvents = DocumentSandbox._shouldEmitDocumentCleanedEvents(this.document);
 
         if (shouldEmitEvents)
@@ -126,11 +126,11 @@ export default class DocumentSandbox extends SandboxBase {
         };
 
         docPrototype.close = (...args) => {
-            // NOTE: IE10 and IE9 raise the "load" event only when the document.close method is called. We need to
+            // NOTE: IE11 raises the "load" event only when the document.close method is called. We need to
             // restore the overriden document.open and document.write methods before Hammerhead injection, if the
             // window is not initialized.
-            // if (isIE && !IframeSandbox.isWindowInited(window))
-            //     nativeMethods.restoreDocumentMeths(document);
+            if (isIE && !IframeSandbox.isWindowInited(window))
+                nativeMethods.restoreOverridenDocumentMethods(window);
 
             // NOTE: IE doesn't run scripts in iframe if iframe.documentContent.designMode equals 'on' (GH-871)
             if (typeof document.designMode === 'string' && document.designMode.toLowerCase() === 'on')
@@ -165,11 +165,11 @@ export default class DocumentSandbox extends SandboxBase {
         };
 
         docPrototype.write = function () {
-            return documentSandbox._overridedDocumentWrite(arguments);
+            return documentSandbox._performDocumentWrite(arguments);
         };
 
         docPrototype.writeln = function () {
-            return documentSandbox._overridedDocumentWrite(arguments, true);
+            return documentSandbox._performDocumentWrite(arguments, true);
         };
 
         docPrototype.createDocumentFragment = (...args) => {

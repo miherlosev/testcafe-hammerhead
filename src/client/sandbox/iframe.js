@@ -40,7 +40,7 @@ export default class IframeSandbox extends SandboxBase {
         if (!this.iframeNativeMethodsBackup && this._shouldSaveIframeNativeMethods(iframe))
             this.iframeNativeMethodsBackup = new this.nativeMethods.constructor(iframe.contentDocument, iframe.contentWindow);
         else if (this.iframeNativeMethodsBackup) {
-            this.iframeNativeMethodsBackup.restoreDocumentMeths(iframe.contentDocument);
+            this.iframeNativeMethodsBackup.restoreOverridenDocumentMethods(iframe.contentWindow);
             this.iframeNativeMethodsBackup = null;
         }
     }

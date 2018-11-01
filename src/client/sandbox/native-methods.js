@@ -23,13 +23,13 @@ class NativeMethods {
         const docPrototype = win.Document.prototype;
 
         // Dom
-        this.createDocumentFragment = docPrototype.createDocumentFragment || doc.createDocumentFragment;
-        this.createElement          = docPrototype.createElement || doc.createElement;
-        this.createElementNS        = docPrototype.createElementNS || doc.createElementNS;
-        this.documentOpen           = docPrototype.open || doc.open;
-        this.documentClose          = docPrototype.close || doc.close;
-        this.documentWrite          = docPrototype.write || doc.write;
-        this.documentWriteLn        = docPrototype.writeln || doc.writeln;
+        this.createDocumentFragment = docPrototype.createDocumentFragment;
+        this.createElement          = docPrototype.createElement;
+        this.createElementNS        = docPrototype.createElementNS;
+        this.documentOpen           = docPrototype.open;
+        this.documentClose          = docPrototype.close;
+        this.documentWrite          = docPrototype.write;
+        this.documentWriteLn        = docPrototype.writeln;
         this.elementFromPoint       = doc.elementFromPoint || docPrototype.elementFromPoint;
         this.caretRangeFromPoint    = doc.caretRangeFromPoint || docPrototype.caretRangeFromPoint;
         this.caretPositionFromPoint = doc.caretPositionFromPoint || docPrototype.caretPositionFromPoint;
@@ -620,6 +620,18 @@ class NativeMethods {
         document.createEvent         = this.documentCreateEvent;
         document.createTouch         = this.documentCreateTouch;
         document.createTouchList     = this.documentCreateTouchList;
+    }
+
+    restoreOverridenDocumentMethods (win) {
+        const docPrototype    = win.Document.prototype;
+
+        docPrototype.open                   = this.documentOpen;
+        docPrototype.close                  = this.documentClose;
+        docPrototype.createElement          = this.createElement;
+        docPrototype.createElementNS        = this.createElementNS;
+        docPrototype.write                  = this.documentWrite;
+        docPrototype.writeln                = this.documentWriteLn;
+        docPrototype.createDocumentFragment = this.createDocumentFragment;
     }
 
     refreshIfNecessary (doc, win) {
